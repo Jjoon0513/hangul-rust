@@ -5,6 +5,22 @@ pub mod error;
 
 pub use hangulchar::HangulChar;
 
+pub enum Josa{
+
+    //격조사
+    Yi, // 주격조사: 이/가
+    Ul, // 목적격조사: 을/를
+    Ege, // 간접 목적격조사: 에게/한테
+    Ui, // 소유격조사: 의
+    E, // 부사격 조사: 에
+    Eso, // 부사격 조사: 에서
+    Ro, // 부사격조사: 로/으로
+
+    //보조사
+    Un, // 주격조사: 은/는
+    Do,
+}
+
 pub enum Syllable{
     Chosung,
     Jungsung,

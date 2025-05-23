@@ -4,6 +4,7 @@ use crate::hangul::constants::{CHOSUNG, JUNGSUNG, JONGSUNG};
 use crate::hangul::{Jamo, Syllable};
 use crate::hangul::error::HangulError;
 
+#[derive(Clone)]
 pub struct HangulChar {
     pub chosung: char,
     pub jungsung: char,
@@ -63,6 +64,12 @@ impl HangulChar {
             Syllable::Jongsung => self.jongsung,
         }
     }
+
+    pub fn to_char(&self) -> char {
+        self.compose().unwrap_or('?')
+    }
+
+
 
     pub fn set_syllable_structure(&mut self, syllable: Syllable, jamo: Jamo) -> Result<(), HangulError> {
         match syllable {
