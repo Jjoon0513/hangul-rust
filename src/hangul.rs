@@ -5,6 +5,7 @@ pub mod error;
 
 pub use hangulchar::HangulChar;
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Josa{
 
     //격조사
@@ -21,6 +22,7 @@ pub enum Josa{
     Do,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Syllable{
     Chosung,
     Jungsung,
