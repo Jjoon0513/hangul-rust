@@ -3,196 +3,227 @@ pub mod hangulchar;
 pub mod constants;
 pub mod error;
 
-pub use hangulchar::HangulChar;
+use std::fmt;
+pub use hangulchar::한글자;
 
-pub enum Josa{
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum 조사 {
+    // 격조사
+    이,      // 주격조사: 이/가
+    을,      // 목적격조사: 을/를
+    에게,    // 간접 목적격조사: 에게/한테
+    의,      // 소유격조사
+    에,      // 부사격조사: 장소, 시간 등
+    에서,    // 부사격조사: 장소, 출발점 등
+    로,      // 부사격조사: 방향, 수단 (로/으로 통합)
 
-    //격조사
-    Yi, // 주격조사: 이/가
-    Ul, // 목적격조사: 을/를
-    Ege, // 간접 목적격조사: 에게/한테
-    Ui, // 소유격조사: 의
-    E, // 부사격 조사: 에
-    Eso, // 부사격 조사: 에서
-    Ro, // 부사격조사: 로/으로
-
-    //보조사
-    Un, // 주격조사: 은/는
-    Do,
+    // 보조사
+    은,      // 보조사: 주제 (은/는)
+    도,      // 보조사: 또한
+    만,      // 보조사: 한정
+    까지,    // 보조사: 범위
+    마저,    // 보조사: 심지어
+    조차,    // 보조사: 심지어
+    라도,    // 보조사: 양보
+    야,      // 보조사: 강조
 }
 
-pub enum Syllable{
-    Chosung,
-    Jungsung,
-    Jongsung
+impl fmt::Display for 조사 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let s = match self {
+            조사::이 => "이",
+            조사::을 => "을",
+            조사::에게 => "에게",
+            조사::의 => "의",
+            조사::에 => "에",
+            조사::에서 => "에서",
+            조사::로 => "로",
+            조사::은 => "은",
+            조사::도 => "도",
+            조사::만 => "만",
+            조사::까지 => "까지",
+            조사::마저 => "마저",
+            조사::조차 => "조차",
+            조사::라도 => "라도",
+            조사::야 => "야",
+        };
+        write!(f, "{}", s)
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum Jaum {
-    Giyeok,
-    SsangGiyeok,
-    Nieun,
-    Digeut,
-    SsangDigeut,
-    Rieul,
-    Mieum,
-    Bieup,
-    SsangBieup,
-    Sios,
-    SsangSios,
-    Ieung,
-    Jieut,
-    SsangJieut,
-    Chieut,
-    Khieukh,
-    Thieuth,
-    Phieuph,
-    Hieuh,
+pub enum 음절 {
+    초성,
+    중성,
+    종성
 }
 
-impl Jaum {
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum 자음 {
+    ㄱ,
+    ㄲ,
+    ㄴ,
+    ㄷ,
+    ㄸ,
+    ㄹ,
+    ㅁ,
+    ㅂ,
+    ㅃ,
+    ㅅ,
+    ㅆ,
+    ㅇ,
+    ㅈ,
+    ㅉ,
+    ㅊ,
+    ㅋ,
+    ㅌ,
+    ㅍ,
+    ㅎ,
+}
+
+impl 자음 {
     pub fn to_char(&self) -> char {
         match self {
-            Jaum::Giyeok => 'ㄱ',
-            Jaum::SsangGiyeok => 'ㄲ',
-            Jaum::Nieun => 'ㄴ',
-            Jaum::Digeut => 'ㄷ',
-            Jaum::SsangDigeut => 'ㄸ',
-            Jaum::Rieul => 'ㄹ',
-            Jaum::Mieum => 'ㅁ',
-            Jaum::Bieup => 'ㅂ',
-            Jaum::SsangBieup => 'ㅃ',
-            Jaum::Sios => 'ㅅ',
-            Jaum::SsangSios => 'ㅆ',
-            Jaum::Ieung => 'ㅇ',
-            Jaum::Jieut => 'ㅈ',
-            Jaum::SsangJieut => 'ㅉ',
-            Jaum::Chieut => 'ㅊ',
-            Jaum::Khieukh => 'ㅋ',
-            Jaum::Thieuth => 'ㅌ',
-            Jaum::Phieuph => 'ㅍ',
-            Jaum::Hieuh => 'ㅎ',
+            자음::ㄱ => 'ㄱ',
+            자음::ㄲ => 'ㄲ',
+            자음::ㄴ => 'ㄴ',
+            자음::ㄷ => 'ㄷ',
+            자음::ㄸ => 'ㄸ',
+            자음::ㄹ => 'ㄹ',
+            자음::ㅁ => 'ㅁ',
+            자음::ㅂ => 'ㅂ',
+            자음::ㅃ => 'ㅃ',
+            자음::ㅅ => 'ㅅ',
+            자음::ㅆ => 'ㅆ',
+            자음::ㅇ => 'ㅇ',
+            자음::ㅈ => 'ㅈ',
+            자음::ㅉ => 'ㅉ',
+            자음::ㅊ => 'ㅊ',
+            자음::ㅋ => 'ㅋ',
+            자음::ㅌ => 'ㅌ',
+            자음::ㅍ => 'ㅍ',
+            자음::ㅎ => 'ㅎ',
         }
     }
 
     pub fn from_char(c: char) -> Option<Self> {
         match c {
-            'ㄱ' => Some(Jaum::Giyeok),
-            'ㄲ' => Some(Jaum::SsangGiyeok),
-            'ㄴ' => Some(Jaum::Nieun),
-            'ㄷ' => Some(Jaum::Digeut),
-            'ㄸ' => Some(Jaum::SsangDigeut),
-            'ㄹ' => Some(Jaum::Rieul),
-            'ㅁ' => Some(Jaum::Mieum),
-            'ㅂ' => Some(Jaum::Bieup),
-            'ㅃ' => Some(Jaum::SsangBieup),
-            'ㅅ' => Some(Jaum::Sios),
-            'ㅆ' => Some(Jaum::SsangSios),
-            'ㅇ' => Some(Jaum::Ieung),
-            'ㅈ' => Some(Jaum::Jieut),
-            'ㅉ' => Some(Jaum::SsangJieut),
-            'ㅊ' => Some(Jaum::Chieut),
-            'ㅋ' => Some(Jaum::Khieukh),
-            'ㅌ' => Some(Jaum::Thieuth),
-            'ㅍ' => Some(Jaum::Phieuph),
-            'ㅎ' => Some(Jaum::Hieuh),
+            'ㄱ' => Some(자음::ㄱ),
+            'ㄲ' => Some(자음::ㄲ),
+            'ㄴ' => Some(자음::ㄲ),
+            'ㄷ' => Some(자음::ㄷ),
+            'ㄸ' => Some(자음::ㄸ),
+            'ㄹ' => Some(자음::ㄹ),
+            'ㅁ' => Some(자음::ㅁ),
+            'ㅂ' => Some(자음::ㅂ),
+            'ㅃ' => Some(자음::ㅃ),
+            'ㅅ' => Some(자음::ㅅ),
+            'ㅆ' => Some(자음::ㅆ),
+            'ㅇ' => Some(자음::ㅇ),
+            'ㅈ' => Some(자음::ㅈ),
+            'ㅉ' => Some(자음::ㅉ),
+            'ㅊ' => Some(자음::ㅊ),
+            'ㅋ' => Some(자음::ㅋ),
+            'ㅌ' => Some(자음::ㅌ),
+            'ㅍ' => Some(자음::ㅍ),
+            'ㅎ' => Some(자음::ㅎ),
             _ => None,
         }
     }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum Moum {
-    A,
-    Ae,
-    Ya,
-    Yae,
-    Eo,
-    E,
-    Yeo,
-    Ye,
-    O,
-    Wa,
-    Wae,
-    Oe,
-    Yo,
-    U,
-    Weo,
-    We,
-    Wi,
-    Yu,
-    Eu,
-    Yi,
-    I,
+pub enum 모음 {
+    ㅏ,
+    ㅐ,
+    ㅑ,
+    ㅒ,
+    ㅓ,
+    ㅔ,
+    ㅕ,
+    ㅖ,
+    ㅗ,
+    ㅘ,
+    ㅙ,
+    ㅚ,
+    ㅛ,
+    ㅜ,
+    ㅝ,
+    ㅞ,
+    ㅟ,
+    ㅠ,
+    ㅡ,
+    ㅢ,
+    ㅣ,
 }
 
-impl Moum {
+impl 모음 {
     pub fn to_char(&self) -> char {
         match self {
-            Moum::A => 'ㅏ',
-            Moum::Ae => 'ㅐ',
-            Moum::Ya => 'ㅑ',
-            Moum::Yae => 'ㅒ',
-            Moum::Eo => 'ㅓ',
-            Moum::E => 'ㅔ',
-            Moum::Yeo => 'ㅕ',
-            Moum::Ye => 'ㅖ',
-            Moum::O => 'ㅗ',
-            Moum::Wa => 'ㅘ',
-            Moum::Wae => 'ㅙ',
-            Moum::Oe => 'ㅚ',
-            Moum::Yo => 'ㅛ',
-            Moum::U => 'ㅜ',
-            Moum::Weo => 'ㅝ',
-            Moum::We => 'ㅞ',
-            Moum::Wi => 'ㅟ',
-            Moum::Yu => 'ㅠ',
-            Moum::Eu => 'ㅡ',
-            Moum::Yi => 'ㅢ',
-            Moum::I => 'ㅣ',
+            모음::ㅏ => 'ㅏ',
+            모음::ㅐ => 'ㅐ',
+            모음::ㅑ => 'ㅑ',
+            모음::ㅒ => 'ㅒ',
+            모음::ㅓ => 'ㅓ',
+            모음::ㅔ => 'ㅔ',
+            모음::ㅕ => 'ㅕ',
+            모음::ㅖ => 'ㅖ',
+            모음::ㅗ => 'ㅗ',
+            모음::ㅘ => 'ㅘ',
+            모음::ㅙ => 'ㅙ',
+            모음::ㅚ => 'ㅚ',
+            모음::ㅛ => 'ㅛ',
+            모음::ㅜ => 'ㅜ',
+            모음::ㅝ => 'ㅝ',
+            모음::ㅞ => 'ㅞ',
+            모음::ㅟ => 'ㅟ',
+            모음::ㅠ => 'ㅠ',
+            모음::ㅡ => 'ㅡ',
+            모음::ㅢ => 'ㅢ',
+            모음::ㅣ => 'ㅣ',
         }
     }
 
     pub fn from_char(c: char) -> Option<Self> {
         match c {
-            'ㅏ' => Some(Moum::A),
-            'ㅐ' => Some(Moum::Ae),
-            'ㅑ' => Some(Moum::Ya),
-            'ㅒ' => Some(Moum::Yae),
-            'ㅓ' => Some(Moum::Eo),
-            'ㅔ' => Some(Moum::E),
-            'ㅕ' => Some(Moum::Yeo),
-            'ㅖ' => Some(Moum::Ye),
-            'ㅗ' => Some(Moum::O),
-            'ㅘ' => Some(Moum::Wa),
-            'ㅙ' => Some(Moum::Wae),
-            'ㅚ' => Some(Moum::Oe),
-            'ㅛ' => Some(Moum::Yo),
-            'ㅜ' => Some(Moum::U),
-            'ㅝ' => Some(Moum::Weo),
-            'ㅞ' => Some(Moum::We),
-            'ㅟ' => Some(Moum::Wi),
-            'ㅠ' => Some(Moum::Yu),
-            'ㅡ' => Some(Moum::Eu),
-            'ㅢ' => Some(Moum::Yi),
-            'ㅣ' => Some(Moum::I),
+            'ㅏ' => Some(모음::ㅏ),
+            'ㅐ' => Some(모음::ㅐ),
+            'ㅑ' => Some(모음::ㅑ),
+            'ㅒ' => Some(모음::ㅒ),
+            'ㅓ' => Some(모음::ㅓ),
+            'ㅔ' => Some(모음::ㅔ),
+            'ㅕ' => Some(모음::ㅕ),
+            'ㅖ' => Some(모음::ㅖ),
+            'ㅗ' => Some(모음::ㅗ),
+            'ㅘ' => Some(모음::ㅘ),
+            'ㅙ' => Some(모음::ㅙ),
+            'ㅚ' => Some(모음::ㅚ),
+            'ㅛ' => Some(모음::ㅛ),
+            'ㅜ' => Some(모음::ㅜ),
+            'ㅝ' => Some(모음::ㅝ),
+            'ㅞ' => Some(모음::ㅞ),
+            'ㅟ' => Some(모음::ㅟ),
+            'ㅠ' => Some(모음::ㅠ),
+            'ㅡ' => Some(모음::ㅡ),
+            'ㅢ' => Some(모음::ㅢ),
+            'ㅣ' => Some(모음::ㅣ),
             _ => None,
         }
     }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum Jamo{
-    Jaum(Jaum),
-    Moum(Moum),
+pub enum 자모 {
+    자음(자음),
+    모음(모음),
 }
 
 
-impl Jamo {
+impl 자모 {
     pub fn to_char(&self) -> char {
         match self {
-            Jamo::Jaum(j) => j.to_char(),
-            Jamo::Moum(m) => m.to_char(),
+            자모::자음(j) => j.to_char(),
+            자모::모음(m) => m.to_char(),
         }
     }
 }

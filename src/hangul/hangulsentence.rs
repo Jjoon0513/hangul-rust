@@ -1,17 +1,18 @@
+use std::fmt::Display;
 use crate::hangul::error::HangulError;
-use crate::hangul::HangulChar;
+use crate::hangul::{한글자, 조사};
 
 #[derive(Clone)]
-pub struct HangulSentence {
-    hangulsentence:Vec<HangulChar>,
+pub struct 한글문장 {
+    hangulsentence:Vec<한글자>,
 }
 
-impl HangulSentence {
+impl 한글문장 {
     pub fn new(input: &str) -> Result<Self, HangulError> {
         let mut hchars = Vec::new();
 
         for ch in input.chars() {
-            let hchar = HangulChar::new(ch)?;
+            let hchar = 한글자::new(ch)?;
             hchars.push(hchar);
         }
 
@@ -28,11 +29,11 @@ impl HangulSentence {
 
         c
     }
-    pub fn push(&mut self, c: HangulChar) {
+    pub fn push(&mut self, c: 한글자) {
         self.hangulsentence.push(c);
     }
 
-    pub fn to_vec(&self) -> Vec<HangulChar> {
+    pub fn to_vec(&self) -> Vec<한글자> {
         self.hangulsentence.clone()
     }
 
@@ -44,5 +45,53 @@ impl HangulSentence {
         self.hangulsentence.is_empty()
     }
 
-    pub fn add_josa(&mut self,)
+    pub fn 조사붙히기(&mut self, 조사: 조사){
+        match 조사 {
+            조사::은 => {
+                if self.hangulsentence.last().is_none() {
+                    return;
+                }
+                else if self.hangulsentence.last().unwrap().종성이없는가() {
+                    self.hangulsentence.push(한글자::new('는').unwrap());
+                }
+                else {
+                    self.hangulsentence.push(한글자::new('은').unwrap());
+                }
+            }
+            조사::이 => {
+                if self.hangulsentence.last().is_none() {
+                    return;
+                }
+                else if self.hangulsentence.last().unwrap().종성이없는가() {
+                    self.hangulsentence.push(한글자::new('가').unwrap());
+                }
+                else {
+                    self.hangulsentence.push(한글자::new('이').unwrap());
+                }
+            }
+            조사::을 => {
+                if self.hangulsentence.last().is_none() {
+                    return;
+                }
+                else if self.hangulsentence.last().unwrap().종성이없는가() {
+                    self.hangulsentence.push(한글자::new('를').unwrap());
+                }
+                else {
+                    self.hangulsentence.push(한글자::new('을').unwrap());
+                }
+            }
+            other => {
+                if self.hangulsentence.last().is_none() {
+                    return;
+                }
+                else {
+                    for ch in other.to_string().chars() {
+                        self.hangulsentence.push(한글자::new(ch).unwrap());
+                    }
+                }
+            }
+
+        }
+    }
+
 }

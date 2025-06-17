@@ -1,17 +1,17 @@
 use std::fmt::{Display, Formatter, Result as FmtResult};
 
 use crate::hangul::constants::{CHOSUNG, JUNGSUNG, JONGSUNG};
-use crate::hangul::{Jamo, Syllable};
+use crate::hangul::{자모, 음절};
 use crate::hangul::error::HangulError;
 
 #[derive(Clone)]
-pub struct HangulChar {
+pub struct 한글자 {
     pub chosung: char,
     pub jungsung: char,
     pub jongsung: char,
 }
 
-impl HangulChar {
+impl 한글자 {
     pub fn new(hangul: char) -> Result<Self, HangulError> {
         let code = hangul as u32;
         if !(0xAC00..=0xD7A3).contains(&code) {
@@ -29,8 +29,7 @@ impl HangulChar {
             jongsung: JONGSUNG[jong],
         })
     }
-
-    pub fn tensed(&self) -> Self {
+    pub fn 된소리화(&self) -> Self {
         let chosung_tensed = match self.chosung {
             'ㄱ' => 'ㄲ',
             'ㅂ' => 'ㅃ',
@@ -46,8 +45,7 @@ impl HangulChar {
             jongsung: self.jongsung,
         }
     }
-
-    pub fn compose(&self) -> Result<char, HangulError> {
+    pub fn 한글로결합(&self) -> Result<char, HangulError> {
         let cho = CHOSUNG.iter().position(|&c| c == self.chosung)
             .ok_or(HangulError::InvalidComponent("chosung", self.chosung))?;
         let jung = JUNGSUNG.iter().position(|&c| c == self.jungsung)
@@ -56,48 +54,50 @@ impl HangulChar {
 
         Ok(char::from_u32(0xAC00 + ((cho * 21 + jung) * 28 + jong) as u32).unwrap())
     }
-
-    pub fn get_syllable_structure(&self, syllable: Syllable) -> char {
-        match syllable {
-            Syllable::Chosung => self.chosung,
-            Syllable::Jungsung => self.jungsung,
-            Syllable::Jongsung => self.jongsung,
+    pub fn get_음절구조(&self, 음절: 음절) -> char {
+        match 음절 {
+            음절::초성 => self.chosung,
+            음절::중성 => self.jungsung,
+            음절::종성 => self.jongsung,
         }
     }
 
+    pub fn 종성이없는가(&self) -> bool {
+        self.jongsung == '\0'
+    }
+
     pub fn to_char(&self) -> char {
-        self.compose().unwrap_or('?')
+        self.한글로결합().unwrap_or('?')
     }
 
 
-
-    pub fn set_syllable_structure(&mut self, syllable: Syllable, jamo: Jamo) -> Result<(), HangulError> {
-        match syllable {
-            Syllable::Chosung => {
-                if matches!(jamo, Jamo::Moum(_)) {
-                    return Err(HangulError::InvalidComponent("chosung", jamo.to_char()));
+    pub fn set_음절구조(&mut self, 음절: 음절, 자모: 자모) -> Result<(), HangulError> {
+        match 음절 {
+            음절::초성 => {
+                if matches!(자모, 자모::모음(_)) {
+                    return Err(HangulError::InvalidComponent("chosung", 자모.to_char()));
                 }
-                self.chosung = jamo.to_char();
+                self.chosung = 자모.to_char();
             }
-            Syllable::Jungsung => {
-                if matches!(jamo, Jamo::Jaum(_)) {
-                    return Err(HangulError::InvalidComponent("jungsung", jamo.to_char()));
+            음절::중성 => {
+                if matches!(자모, 자모::자음(_)) {
+                    return Err(HangulError::InvalidComponent("jungsung", 자모.to_char()));
                 }
-                self.jungsung = jamo.to_char();
+                self.jungsung = 자모.to_char();
             }
-            Syllable::Jongsung => {
-                if matches!(jamo, Jamo::Moum(_)) {
-                    return Err(HangulError::InvalidComponent("jongsung", jamo.to_char()));
+            음절::종성 => {
+                if matches!(자모, 자모::모음(_)) {
+                    return Err(HangulError::InvalidComponent("jongsung", 자모.to_char()));
                 }
-                self.jongsung = jamo.to_char();
+                self.jongsung = 자모.to_char();
             }
         }
         Ok(())
     }
 }
 
-impl Display for HangulChar {
+impl Display for 한글자 {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-        write!(f, "{}", self.compose().unwrap_or('?'))
+        write!(f, "{}", self.한글로결합().unwrap_or('?'))
     }
 }
