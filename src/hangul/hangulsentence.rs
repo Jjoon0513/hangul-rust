@@ -1,4 +1,3 @@
-use std::fmt::Display;
 use crate::hangul::error::HangulError;
 use crate::hangul::{한글자, 조사};
 

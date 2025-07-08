@@ -1,5 +1,3 @@
-#![allow(uncommon_codepoints)]
-
 use hangul::hangul::{한글자, 음절, 자모, 모음};
 
 fn main() {
